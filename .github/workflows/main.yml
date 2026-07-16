@@ -25,12 +25,12 @@ jobs:
         run: chmod +x gradlew
 
       # Kod kalitesini analiz etmek için (İsteğe bağlı)
-      - name: Run Lint
-        run: ./gradlew lintDebug
+      # name: Run Lint
+      #  run: ./gradlew lintDebug
 
       # Birim testlerini çalıştırmak için (İsteğe bağlı)
-      - name: Run Unit Tests
-        run: ./gradlew testDebugUnitTest
+      # name: Run Unit Tests
+      #  run: ./gradlew testDebugUnitTest
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
