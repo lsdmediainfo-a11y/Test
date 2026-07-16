@@ -94,6 +94,13 @@ fun CustomWebView(
                                       
                         if (isMedia) {
                             Log.d("CustomWebView", "NATIVE_INTERCEPT -> Discovered Media URL: $url")
+                            val event = com.example.universalvideodownloader.ui.browser.capture.CapturedNetworkEvent(
+                                url = url,
+                                method = request.method,
+                                headers = request.requestHeaders ?: emptyMap(),
+                                source = "native_intercept"
+                            )
+                            onEventCaptured(event)
                         }
                         
                         // Sadece gözlem yapar, daima null döndürür

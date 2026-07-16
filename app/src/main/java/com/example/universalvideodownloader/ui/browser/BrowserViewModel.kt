@@ -77,4 +77,18 @@ class BrowserViewModel @Inject constructor(
     fun onEventCaptured(event: CapturedNetworkEvent) {
         captureManager.onEventCaptured(event)
     }
+
+    fun startDownload(event: CapturedNetworkEvent, context: android.content.Context) {
+        val workManager = androidx.work.WorkManager.getInstance(context)
+        val data = androidx.work.workDataOf(
+            "CANDIDATE_ID" to event.url.hashCode().toString(),
+            "VIDEO_URL" to event.url,
+            "TYPE" to if (event.url.contains(".m3u8")) "HLS" else "MP4"
+        )
+        val request = androidx.work.OneTimeWorkRequestBuilder<com.example.universalvideodownloader.data.download.VideoDownloadWorker>()
+            .setInputData(data)
+            .build()
+        workManager.enqueue(request)
+        android.widget.Toast.makeText(context, "İndirme başlatıldı...", android.widget.Toast.LENGTH_SHORT).show()
+    }
 }

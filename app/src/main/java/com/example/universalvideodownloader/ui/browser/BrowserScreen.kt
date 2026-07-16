@@ -27,6 +27,8 @@ fun BrowserScreen(
     val captureCount = currentSession?.activeEvents?.count { !it.isAd } ?: 0
     val adCount = currentSession?.activeEvents?.count { it.isAd } ?: 0
     val isVideoPlaying = currentSession?.isVideoPlaying == true
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     Scaffold(
         topBar = {
@@ -77,7 +79,7 @@ fun BrowserScreen(
         floatingActionButton = {
             if (captureCount > 0) {
                 ExtendedFloatingActionButton(
-                    onClick = { /* Bottom sheet açılacak */ },
+                    onClick = { showBottomSheet = true },
                     icon = { Icon(Icons.Default.KeyboardArrowDown, contentDescription = "İndirme") },
                     text = { 
                         val text = if (isVideoPlaying) "Video Bulundu ($captureCount)" else "Medya Yakalandı ($captureCount)"
@@ -86,7 +88,7 @@ fun BrowserScreen(
                     }
                 )
             } else {
-                FloatingActionButton(onClick = { /* Bottom sheet açılacak */ }) {
+                FloatingActionButton(onClick = { showBottomSheet = true }) {
                     Icon(Icons.Default.KeyboardArrowDown, contentDescription = "İndirme")
                 }
             }
@@ -103,6 +105,35 @@ fun BrowserScreen(
                 },
                 onEventCaptured = { viewModel.onEventCaptured(it) }
             )
+        }
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false }
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text("Yakalanan Videolar", style = MaterialTheme.typography.titleLarge)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    currentSession?.activeEvents?.filter { !it.isAd }?.forEach { event ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            onClick = {
+                                viewModel.startDownload(event, context)
+                                showBottomSheet = false
+                            }
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(event.url, maxLines = 2, style = MaterialTheme.typography.bodyMedium)
+                                Text("Tür: ${if (event.url.contains(".m3u8")) "HLS" else "MP4"} | Puan: ${event.score}", style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                    }
+                    if ((currentSession?.activeEvents?.count { !it.isAd } ?: 0) == 0) {
+                        Text("Henüz video yakalanamadı. Lütfen sayfada bir video oynatmayı deneyin.")
+                    }
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+            }
         }
     }
 }
