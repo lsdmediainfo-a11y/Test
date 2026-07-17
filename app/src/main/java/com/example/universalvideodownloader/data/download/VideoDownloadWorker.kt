@@ -85,20 +85,39 @@ class VideoDownloadWorker @AssistedInject constructor(
     }
 
     private fun downloadHls(playlistUrl: String, outputFile: File, headers: Map<String, String>) {
-        val requestBuilder = Request.Builder().url(playlistUrl)
+        var currentUrl = playlistUrl
+        var requestBuilder = Request.Builder().url(currentUrl)
         headers.forEach { (k, v) -> requestBuilder.header(k, v) }
-        val response = okHttpClient.newCall(requestBuilder.build()).execute()
+        var response = okHttpClient.newCall(requestBuilder.build()).execute()
         
         if (!response.isSuccessful) throw Exception("HLS Playlist fetch failed")
         
-        val body = response.body?.string() ?: return
+        var body = response.body?.string() ?: return
+        
+        // Eğer bu bir Master Playlist ise (kalite seçenekleri barındırıyorsa), ilk varyantı seç
+        if (body.contains("#EXT-X-STREAM-INF")) {
+            val lines = body.lines()
+            for (line in lines) {
+                if (!line.startsWith("#") && line.trim().isNotEmpty()) {
+                    currentUrl = if (line.startsWith("http")) line else java.net.URL(java.net.URL(currentUrl), line).toString()
+                    break
+                }
+            }
+            // Seçilen varyantı tekrar indir
+            requestBuilder = Request.Builder().url(currentUrl)
+            headers.forEach { (k, v) -> requestBuilder.header(k, v) }
+            response = okHttpClient.newCall(requestBuilder.build()).execute()
+            if (!response.isSuccessful) throw Exception("HLS Variant Playlist fetch failed")
+            body = response.body?.string() ?: return
+        }
+
         val lines = body.lines()
         
         FileOutputStream(outputFile, true).use { output ->
             for (line in lines) {
                 if (line.trim().isEmpty() || line.startsWith("#")) continue
                 
-                val tsUrl = if (line.startsWith("http")) line else java.net.URL(java.net.URL(playlistUrl), line).toString()
+                val tsUrl = if (line.startsWith("http")) line else java.net.URL(java.net.URL(currentUrl), line).toString()
                 
                 var retries = 0
                 var success = false

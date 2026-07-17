@@ -37,7 +37,7 @@ fun DownloadsScreen(onPlayVideo: (String) -> Unit = {}) {
         while (true) {
             val dir = context.getExternalFilesDir(null)
             if (dir != null && dir.exists()) {
-                completedFiles = dir.listFiles()?.filter { it.name.endsWith(".mp4") }?.sortedByDescending { it.lastModified() } ?: emptyList()
+                completedFiles = dir.listFiles()?.filter { it.name.endsWith(".mp4") || it.name.endsWith(".ts") }?.sortedByDescending { it.lastModified() } ?: emptyList()
             }
             
             val infos = workManager.getWorkInfosByTag("video_download").get()
