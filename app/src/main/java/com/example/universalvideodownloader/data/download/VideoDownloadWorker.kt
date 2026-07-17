@@ -96,15 +96,19 @@ class VideoDownloadWorker @AssistedInject constructor(
             }
             Log.e("DownloadWorker", "Bağlantı kesintisi veya hata", e)
             downloadDao.updateStatus(workerId, "FAILED", System.currentTimeMillis())
-            Result.retry()
+            Result.failure()
         }
     }
 
     private fun downloadHls(playlistUrl: String, outputFile: File, headers: Map<String, String>) {
+        val userAgent = headers["User-Agent"] ?: "Mozilla/5.0 (Windows NT 10.0; Win64; x64 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36)"
+        
         // FFmpeg komutu için Header'ları formatla
         var headerString = ""
         headers.forEach { (k, v) ->
-            headerString += "$k: $v\r\n"
+            if (!k.equals("User-Agent", ignoreCase = true)) {
+                headerString += "$k: $v\r\n"
+            }
         }
         
         // Eğer bu bir Master Playlist ise (kalite seçenekleri barındırıyorsa), ilk varyantı seç
@@ -131,11 +135,17 @@ class VideoDownloadWorker @AssistedInject constructor(
 
         Log.d("DownloadWorker", "RxFFmpeg HLS İndirme Başlıyor: $targetUrl")
         
-        val command = if (headerString.isNotEmpty()) {
-            arrayOf("ffmpeg", "-headers", headerString, "-i", targetUrl, "-c", "copy", "-bsf:a", "aac_adtstoasc", "-y", outputFile.absolutePath)
-        } else {
-            arrayOf("ffmpeg", "-i", targetUrl, "-c", "copy", "-bsf:a", "aac_adtstoasc", "-y", outputFile.absolutePath)
+        val commandList = mutableListOf("ffmpeg")
+        commandList.add("-user_agent")
+        commandList.add(userAgent)
+        
+        if (headerString.isNotEmpty()) {
+            commandList.add("-headers")
+            commandList.add(headerString)
         }
+        
+        commandList.addAll(listOf("-i", targetUrl, "-c", "copy", "-bsf:a", "aac_adtstoasc", "-y", outputFile.absolutePath))
+        val command = commandList.toTypedArray()
 
         val returnCode = io.microshow.rxffmpeg.RxFFmpegInvoke.getInstance().runCommand(command, null)
         
