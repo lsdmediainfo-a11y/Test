@@ -53,8 +53,10 @@ class CaptureManager @Inject constructor() {
             event.score = score
             event.isAd = false
             
-            // Deduplication (Aynı tür ve URL'ye sahip etkinlikleri ekleme)
-            val exists = session.activeEvents.any { it.url == event.url }
+            // Deduplication Rule 3: Base URL bazlı filtreleme (Sorgu parametreleri hariç)
+            val eventBaseUrl = event.url.substringBefore("?")
+            val exists = session.activeEvents.any { it.url.substringBefore("?") == eventBaseUrl }
+            
             if (exists) {
                 // Sadece isVideoPlaying durumunu güncellememiz gerekebilir (play_event gelirse)
                 if (event.source == "play_event" && !session.isVideoPlaying) {
