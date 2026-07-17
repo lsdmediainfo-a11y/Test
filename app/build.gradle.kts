@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.universalvideodownloader"
+    namespace = "com.sekerkirrma.rs"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.universalvideodownloader"
+        applicationId = "com.sekerkirrma.rs"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -20,6 +20,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+        
+        ndk {
+            abiFilters.addAll(listOf("x86", "x86_64", "armeabi-v7a", "arm64-v8a"))
         }
     }
 
@@ -45,6 +49,9 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+        jniLibs {
+            useLegacyPackaging = true
         }
     }
     lint {
@@ -104,6 +111,10 @@ dependencies {
 
     // RxFFmpeg for HLS downloading and muxing
     implementation("com.github.microshow:RxFFmpeg:4.9.0-lite")
+
+    // YoutubeDL
+    implementation("io.github.junkfood02.youtubedl-android:library:0.18.1")
+    implementation("io.github.junkfood02.youtubedl-android:ffmpeg:0.18.1")
 
     // Tests
     testImplementation("junit:junit:4.13.2")

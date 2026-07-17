@@ -1,0 +1,62 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugResValues
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:checkDebugAarMetadata
+> Task :app:packageDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:parseDebugLocalResources
+> Task :app:extractDeepLinksDebug
+
+> Task :app:processDebugMainManifest
+[org.chromium.net:cronet-embedded:119.6045.31] /root/.gradle/caches/transforms-3/5ca2dcb41724750b9ee0ccf3d3b57b30/transformed/cronet-embedded-119.6045.31/AndroidManifest.xml Warning:
+	Namespace 'org.chromium.net' is used in multiple modules and/or libraries: org.chromium.net:cronet-embedded:119.6045.31, org.chromium.net:cronet-common:119.6045.31, org.chromium.net:cronet-api:119.6045.31. Please ensure that all modules and libraries have a unique namespace. For more information, See https://developer.android.com/studio/build/configure-app-module#set-namespace
+
+> Task :app:mergeDebugResources
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:processDebugResources'.
+> Could not resolve all files for configuration ':app:debugRuntimeClasspath'.
+   > Failed to transform media3-ui-1.1.1.aar (androidx.media3:media3-ui:1.1.1) to match attributes {artifactType=android-compiled-dependencies-resources, org.gradle.category=library, org.gradle.dependency.bundling=external, org.gradle.libraryelements=aar, org.gradle.status=release, org.gradle.usage=java-runtime}.
+      > Execution failed for AarResourcesCompilerTransform: /root/.gradle/caches/transforms-3/d59be3775f2e620fc0079d6809195524/transformed/media3-ui-1.1.1.
+         > AAPT2 aapt2-8.1.1-10154469-linux Daemon #2: Daemon startup failed
+           This should not happen under normal circumstances, please file an issue if it does.
+   > Failed to transform core-1.12.0.aar (androidx.core:core:1.12.0) to match attributes {artifactType=android-compiled-dependencies-resources, org.gradle.category=library, org.gradle.dependency.bundling=external, org.gradle.libraryelements=aar, org.gradle.status=release, org.gradle.usage=java-runtime}.
+      > Execution failed for AarResourcesCompilerTransform: /root/.gradle/caches/transforms-3/4a817082f1e4904691cba2bcb8047389/transformed/core-1.12.0.
+         > AAPT2 aapt2-8.1.1-10154469-linux Daemon #1: Daemon startup failed
+           This should not happen under normal circumstances, please file an issue if it does.
+   > Failed to transform core-1.12.0.aar (androidx.core:core:1.12.0) to match attributes {artifactType=android-compiled-dependencies-resources, org.gradle.status=release}.
+      > Execution failed for AarResourcesCompilerTransform: /root/.gradle/caches/transforms-3/4a817082f1e4904691cba2bcb8047389/transformed/core-1.12.0.
+         > AAPT2 aapt2-8.1.1-10154469-linux Daemon #1: Daemon startup failed
+           This should not happen under normal circumstances, please file an issue if it does.
+   > Failed to transform core-1.12.0.aar (androidx.core:core:1.12.0) to match attributes {artifactType=android-compiled-dependencies-resources, org.gradle.status=release}.
+      > Execution failed for AarResourcesCompilerTransform: /root/.gradle/caches/transforms-3/4a817082f1e4904691cba2bcb8047389/transformed/core-1.12.0.
+         > AAPT2 aapt2-8.1.1-10154469-linux Daemon #1: Daemon startup failed
+           This should not happen under normal circumstances, please file an issue if it does.
+   > Failed to transform core-1.12.0.aar (androidx.core:core:1.12.0) to match attributes {artifactType=android-compiled-dependencies-resources, org.gradle.status=release}.
+      > Execution failed for AarResourcesCompilerTransform: /root/.gradle/caches/transforms-3/4a817082f1e4904691cba2bcb8047389/transformed/core-1.12.0.
+         > AAPT2 aapt2-8.1.1-10154469-linux Daemon #1: Daemon startup failed
+           This should not happen under normal circumstances, please file an issue if it does.
+   > Failed to transform core-1.12.0.aar (androidx.core:core:1.12.0) to match attributes {artifactType=android-compiled-dependencies-resources, org.gradle.status=release}.
+      > Execution failed for AarResourcesCompilerTransform: /root/.gradle/caches/transforms-3/4a817082f1e4904691cba2bcb8047389/transformed/core-1.12.0.
+         > AAPT2 aapt2-8.1.1-10154469-linux Daemon #1: Daemon startup failed
+           This should not happen under normal circumstances, please file an issue if it does.
+   > Failed to transform RxFFmpeg-4.9.0-lite.aar (com.github.microshow:RxFFmpeg:4.9.0-lite) to match attributes {artifactType=android-compiled-dependencies-resources, org.gradle.category=library, org.gradle.libraryelements=jar, org.gradle.status=release, org.gradle.usage=java-runtime}.
+      > Execution failed for AarResourcesCompilerTransform: /root/.gradle/caches/transforms-3/d9f15c0d54ca9810f1a08a4bacd13f9b/transformed/RxFFmpeg-4.9.0-lite.
+         > AAPT2 aapt2-8.1.1-10154469-linux Daemon #0: Daemon startup failed
+           This should not happen under normal circumstances, please file an issue if it does.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 13s
+12 actionable tasks: 12 executed
